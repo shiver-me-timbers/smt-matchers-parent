@@ -16,19 +16,16 @@
 
 package shiver.me.timbers.matchers;
 
-import java.util.Date;
-
 /**
- * Matchers that can be used to verify if a date is on or close to another specified date.
- *
  * @author Karl Bennett
  */
-public class DateMatchers {
+public class TimeOperations {
 
-    /**
-     * Check that they actual date is equal to the expected.
-     */
-    public static DateMatcher fallsOn(final Date expected) {
-        return new DateMatcher(new TimeOperations(), expected);
+    public boolean isBefore(long expected, long actual) {
+        return expected >= actual;
+    }
+
+    public boolean isAfter(long expected, long actual) {
+        return expected <= actual;
     }
 }
