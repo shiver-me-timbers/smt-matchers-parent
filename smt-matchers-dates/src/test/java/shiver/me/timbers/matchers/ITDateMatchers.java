@@ -43,6 +43,8 @@ public class ITDateMatchers {
 
     private Mustache errorTemplate;
     private Mustache withinErrorTemplate;
+    private Mustache beforeErrorTemplate;
+    private Mustache afterErrorTemplate;
     private StringWriter writer;
 
     @Before
@@ -50,6 +52,8 @@ public class ITDateMatchers {
         final DefaultMustacheFactory mustacheFactory = new DefaultMustacheFactory(new ClasspathResolver());
         errorTemplate = mustacheFactory.compile("invalid-date-error-message.mustache");
         withinErrorTemplate = mustacheFactory.compile("invalid-within-date-error-message.mustache");
+        beforeErrorTemplate = mustacheFactory.compile("invalid-before-date-error-message.mustache");
+        afterErrorTemplate = mustacheFactory.compile("invalid-after-date-error-message.mustache");
         writer = new StringWriter();
     }
 
@@ -121,5 +125,89 @@ public class ITDateMatchers {
 
         // Then
         assertThat(actual, fallsOn(expected).within(duration, unit));
+    }
+
+    @Test
+    public void Can_check_that_a_date_falls_close_to_before_another_date() {
+
+        // Given
+        final Long date1 = somePositiveLong();
+        final Long duration = someLongBetween(0L, 1000L);
+        final TimeUnit unit = someEnum(TimeUnit.class);
+        final Long durationInMilliseconds = unit.toMillis(duration);
+        final Long difference = someLongBetween(0L, durationInMilliseconds);
+        final Long date2 = date1 - difference;
+        final Date expected = new Date(date1);
+        final Date actual = new Date(date2);
+
+        // Then
+        assertThat(actual, fallsOn(expected).within(duration, unit).before());
+    }
+
+    @Test
+    public void Can_check_that_a_date_falls_too_far_before_another_date() {
+
+        // Given
+        final Long date1 = somePositiveLong();
+        final Long duration = someLongBetween(0L, 1000L);
+        final TimeUnit unit = someEnum(TimeUnit.class);
+        final long durationInMillis = unit.toMillis(duration);
+        final Long difference = durationInMillis + 1;
+        final Long date2 = date1 - difference;
+        final Date expected = new Date(date1);
+        final Date actual = new Date(date2);
+        beforeErrorTemplate.execute(writer, new HashMap<String, Object>() {{
+            put("duration", duration);
+            put("unit", unit);
+            put("expected", expected);
+            put("actual", actual);
+        }});
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage(writer.toString());
+
+        // Then
+        assertThat(actual, fallsOn(expected).within(duration, unit).before());
+    }
+
+    @Test
+    public void Can_check_that_a_date_falls_close_to_after_another_date() {
+
+        // Given
+        final Long date1 = somePositiveLong();
+        final Long duration = someLongBetween(0L, 1000L);
+        final TimeUnit unit = someEnum(TimeUnit.class);
+        final Long durationInMilliseconds = unit.toMillis(duration);
+        final Long difference = someLongBetween(0L, durationInMilliseconds);
+        final Long date2 = date1 + difference;
+        final Date expected = new Date(date1);
+        final Date actual = new Date(date2);
+
+        // Then
+        assertThat(actual, fallsOn(expected).within(duration, unit).after());
+    }
+
+    @Test
+    public void Can_check_that_a_date_falls_too_far_after_another_date() {
+
+        // Given
+        final Long date1 = somePositiveLong();
+        final Long duration = someLongBetween(0L, 1000L);
+        final TimeUnit unit = someEnum(TimeUnit.class);
+        final long durationInMillis = unit.toMillis(duration);
+        final Long difference = durationInMillis + 1;
+        final Long date2 = date1 + difference;
+        final Date expected = new Date(date1);
+        final Date actual = new Date(date2);
+        afterErrorTemplate.execute(writer, new HashMap<String, Object>() {{
+            put("duration", duration);
+            put("unit", unit);
+            put("expected", expected);
+            put("actual", actual);
+        }});
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage(writer.toString());
+
+        // Then
+        assertThat(actual, fallsOn(expected).within(duration, unit).after());
     }
 }

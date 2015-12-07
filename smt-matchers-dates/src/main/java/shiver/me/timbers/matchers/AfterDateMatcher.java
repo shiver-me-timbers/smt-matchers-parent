@@ -24,16 +24,14 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Karl Bennett
  */
-public class WithinDateMatcher extends TimeOperationsDateMatcher {
+public class AfterDateMatcher extends TimeOperationsDateMatcher {
 
-    private final TimeOperations timeOperations;
     private final Date expected;
     private final Long duration;
     private final TimeUnit unit;
 
-    public WithinDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
+    public AfterDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
         super(timeOperations, expected, duration, unit);
-        this.timeOperations = timeOperations;
         this.expected = expected;
         this.duration = duration;
         this.unit = unit;
@@ -41,25 +39,14 @@ public class WithinDateMatcher extends TimeOperationsDateMatcher {
 
     @Override
     protected boolean matchesTime(TimeOperations timeOperations, long expected, long duration, long actual) {
-        return timeOperations.isAfter(expected - duration, actual)
-            && timeOperations.isBefore(expected + duration, actual);
+        return timeOperations.isAfter(expected, actual) && timeOperations.isBefore(expected + duration, actual);
     }
 
     @Override
     public void describeTo(Description description) {
-        final long expectedTime = expected.getTime();
-        final long durationInMillis = unit.toMillis(duration);
-        description.appendText("the date to be within ")
-            .appendValue(new Date(expectedTime - durationInMillis))
-            .appendText(" and ")
-            .appendValue(new Date(expectedTime + durationInMillis));
-    }
-
-    public BeforeDateMatcher before() {
-        return new BeforeDateMatcher(timeOperations, expected, duration, unit);
-    }
-
-    public AfterDateMatcher after() {
-        return new AfterDateMatcher(timeOperations, expected, duration, unit);
+        description.appendText("the date to be no more than ")
+            .appendText(Long.toString(duration)).appendText(" ").appendText(unit.name())
+            .appendText(" after ")
+            .appendValue(expected);
     }
 }
