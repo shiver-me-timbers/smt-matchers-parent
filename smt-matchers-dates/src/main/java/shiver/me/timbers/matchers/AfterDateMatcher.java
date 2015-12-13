@@ -17,36 +17,30 @@
 package shiver.me.timbers.matchers;
 
 import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
+ * A matcher to check that a {@link Date} falls after another date.
+ *
  * @author Karl Bennett
  */
-public class AfterDateMatcher extends TimeOperationsDateMatcher {
+public class AfterDateMatcher extends TypeSafeMatcher<Date> {
 
     private final Date expected;
-    private final Long duration;
-    private final TimeUnit unit;
 
-    public AfterDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
-        super(timeOperations, expected, duration, unit);
+    public AfterDateMatcher(Date expected) {
         this.expected = expected;
-        this.duration = duration;
-        this.unit = unit;
     }
 
     @Override
-    protected boolean matchesTime(TimeOperations timeOperations, long expected, long duration, long actual) {
-        return timeOperations.isAfter(expected, actual) && timeOperations.isBefore(expected + duration, actual);
+    protected boolean matchesSafely(Date actual) {
+        return actual.after(expected);
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("the date to be no more than ")
-            .appendText(Long.toString(duration)).appendText(" ").appendText(unit.name())
-            .appendText(" after ")
-            .appendValue(expected);
+        description.appendText("the date to after ").appendValue(expected);
     }
 }

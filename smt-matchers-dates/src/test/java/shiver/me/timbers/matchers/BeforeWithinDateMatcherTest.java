@@ -23,15 +23,13 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static shiver.me.timbers.data.random.RandomEnums.someEnum;
 import static shiver.me.timbers.data.random.RandomLongs.someLong;
 
-public class WithinDateMatcherTest {
+public class BeforeWithinDateMatcherTest {
 
     private TimeOperations timeOperations;
 
@@ -41,7 +39,7 @@ public class WithinDateMatcherTest {
     }
 
     @Test
-    public void Can_check_that_a_date_is_within_a_range_of_another_date() {
+    public void Can_check_that_a_date_is_within_a_range_before_another_date() {
 
         final Date date1 = mock(Date.class);
         final Date date2 = mock(Date.class);
@@ -57,17 +55,17 @@ public class WithinDateMatcherTest {
         given(date1.getTime()).willReturn(dateTime1);
         given(date2.getTime()).willReturn(dateTime2);
         given(timeOperations.isAfter(dateTime1 - durationInMillis, dateTime2)).willReturn(true);
-        given(timeOperations.isBefore(dateTime1 + durationInMillis, dateTime2)).willReturn(true);
+        given(timeOperations.isBefore(dateTime1, dateTime2)).willReturn(true);
 
         // When
-        final boolean actual = new WithinDateMatcher(timeOperations, date1, duration, unit).matches(date2);
+        final boolean actual = new BeforeWithinDateMatcher(timeOperations, date1, duration, unit).matches(date2);
 
         // Then
         assertThat(actual, is(true));
     }
 
     @Test
-    public void Can_check_that_a_date_is_before_a_range_of_another_date() {
+    public void Can_check_that_a_date_is_before_a_range_before_another_date() {
 
         final Date date1 = mock(Date.class);
         final Date date2 = mock(Date.class);
@@ -83,17 +81,17 @@ public class WithinDateMatcherTest {
         given(date1.getTime()).willReturn(dateTime1);
         given(date2.getTime()).willReturn(dateTime2);
         given(timeOperations.isAfter(dateTime1 - durationInMillis, dateTime2)).willReturn(false);
-        given(timeOperations.isBefore(dateTime1 + durationInMillis, dateTime2)).willReturn(true);
+        given(timeOperations.isBefore(dateTime1, dateTime2)).willReturn(true);
 
         // When
-        final boolean actual = new WithinDateMatcher(timeOperations, date1, duration, unit).matches(date2);
+        final boolean actual = new BeforeWithinDateMatcher(timeOperations, date1, duration, unit).matches(date2);
 
         // Then
         assertThat(actual, is(false));
     }
 
     @Test
-    public void Can_check_that_a_date_is_after_a_range_of_another_date() {
+    public void Can_check_that_a_date_is_after_a_range_before_another_date() {
 
         final Date date1 = mock(Date.class);
         final Date date2 = mock(Date.class);
@@ -109,42 +107,12 @@ public class WithinDateMatcherTest {
         given(date1.getTime()).willReturn(dateTime1);
         given(date2.getTime()).willReturn(dateTime2);
         given(timeOperations.isAfter(dateTime1 - durationInMillis, dateTime2)).willReturn(true);
-        given(timeOperations.isBefore(dateTime1 + durationInMillis, dateTime2)).willReturn(false);
+        given(timeOperations.isBefore(dateTime1, dateTime2)).willReturn(false);
 
         // When
-        final boolean actual = new WithinDateMatcher(timeOperations, date1, duration, unit).matches(date2);
+        final boolean actual = new BeforeWithinDateMatcher(timeOperations, date1, duration, unit).matches(date2);
 
         // Then
         assertThat(actual, is(false));
-    }
-
-    @Test
-    public void Can_create_a_before_date_matcher() {
-
-        // Given
-        final Date date = mock(Date.class);
-        final Long duration = someLong();
-        final TimeUnit unit = someEnum(TimeUnit.class);
-
-        // When
-        final BeforeWithinDateMatcher actual = new WithinDateMatcher(timeOperations, date, duration, unit).before();
-
-        // Then
-        assertThat(actual, not(nullValue()));
-    }
-
-    @Test
-    public void Can_create_a_after_date_matcher() {
-
-        // Given
-        final Date date = mock(Date.class);
-        final Long duration = someLong();
-        final TimeUnit unit = someEnum(TimeUnit.class);
-
-        // When
-        final AfterWithinDateMatcher actual = new WithinDateMatcher(timeOperations, date, duration, unit).after();
-
-        // Then
-        assertThat(actual, not(nullValue()));
     }
 }

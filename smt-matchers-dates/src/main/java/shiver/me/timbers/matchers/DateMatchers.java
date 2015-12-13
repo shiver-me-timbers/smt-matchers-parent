@@ -28,7 +28,15 @@ public class DateMatchers {
     /**
      * Check that they actual date is equal to the expected.
      */
-    public static DateMatcher fallsOn(final Date expected) {
-        return new DateMatcher(new TimeOperations(), expected);
+    public static OnDateMatcher fallsOn(final Date expected) {
+        return new OnDateMatcher(new TimeOperations(), expected);
+    }
+
+    public static AfterDateMatcher fallsAfter(Date expected) {
+        return new AfterDateMatcher(expected);
+    }
+
+    public static BeforeDateMatcher fallsBefore(Date expected) {
+        return new BeforeDateMatcher(expected);
     }
 }

@@ -20,27 +20,37 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
- * A matcher to check that a {@link Date} falls before another date.
+ * A matcher to check the equality of a {@link Date} that can be further customised to better fit the testing scenario.
  *
  * @author Karl Bennett
  */
-public class BeforeDateMatcher extends TypeSafeMatcher<Date> {
+public class OnDateMatcher extends TypeSafeMatcher<Date> {
 
+    private final TimeOperations timeOperations;
     private final Date expected;
 
-    public BeforeDateMatcher(Date expected) {
+    public OnDateMatcher(TimeOperations timeOperations, Date expected) {
+        this.timeOperations = timeOperations;
         this.expected = expected;
     }
 
     @Override
     protected boolean matchesSafely(Date actual) {
-        return actual.before(expected);
+        return expected.equals(actual);
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("the date to before ").appendValue(expected);
+        description.appendText("the date to be ").appendValue(expected);
+    }
+
+    /**
+     * Allow a duration around the expected date that the actual date may fall within.
+     */
+    public WithinDateMatcher within(Long duration, TimeUnit unit) {
+        return new WithinDateMatcher(timeOperations, expected, duration, unit);
     }
 }

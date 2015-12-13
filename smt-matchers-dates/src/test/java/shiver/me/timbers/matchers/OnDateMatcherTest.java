@@ -30,7 +30,7 @@ import static org.mockito.Mockito.mock;
 import static shiver.me.timbers.data.random.RandomEnums.someEnum;
 import static shiver.me.timbers.data.random.RandomLongs.someLong;
 
-public class DateMatcherTest {
+public class OnDateMatcherTest {
 
     private TimeOperations timeOperations;
 
@@ -46,7 +46,7 @@ public class DateMatcherTest {
         final Date date = mock(Date.class);
 
         // When
-        final boolean actual = new DateMatcher(timeOperations, date).matches(date);
+        final boolean actual = new OnDateMatcher(timeOperations, date).matches(date);
 
         // Then
         assertThat(actual, is(true));
@@ -60,7 +60,7 @@ public class DateMatcherTest {
         final Date date2 = mock(Date.class);
 
         // When
-        final boolean actual = new DateMatcher(timeOperations, date1).matches(date2);
+        final boolean actual = new OnDateMatcher(timeOperations, date1).matches(date2);
 
         // Then
         assertThat(actual, is(false));
@@ -75,7 +75,7 @@ public class DateMatcherTest {
         final TimeUnit unit = someEnum(TimeUnit.class);
 
         // When
-        final WithinDateMatcher actual = new DateMatcher(timeOperations, date).within(duration, unit);
+        final WithinDateMatcher actual = new OnDateMatcher(timeOperations, date).within(duration, unit);
 
         // Then
         assertThat(actual, not(nullValue()));

@@ -22,20 +22,18 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A matcher to check that a {@link Date} falls within a duration of another date.
+ * A matcher to check that a {@link Date} falls before another date and within a specified duration.
  *
  * @author Karl Bennett
  */
-public class WithinDateMatcher extends TimeOperationsDateMatcher {
+public class BeforeWithinDateMatcher extends TimeOperationsDateMatcher {
 
-    private final TimeOperations timeOperations;
     private final Date expected;
     private final Long duration;
     private final TimeUnit unit;
 
-    public WithinDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
+    public BeforeWithinDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
         super(timeOperations, expected, duration, unit);
-        this.timeOperations = timeOperations;
         this.expected = expected;
         this.duration = duration;
         this.unit = unit;
@@ -43,25 +41,14 @@ public class WithinDateMatcher extends TimeOperationsDateMatcher {
 
     @Override
     protected boolean matchesTime(TimeOperations timeOperations, long expected, long duration, long actual) {
-        return timeOperations.isAfter(expected - duration, actual)
-            && timeOperations.isBefore(expected + duration, actual);
+        return timeOperations.isAfter(expected - duration, actual) && timeOperations.isBefore(expected, actual);
     }
 
     @Override
     public void describeTo(Description description) {
-        final long expectedTime = expected.getTime();
-        final long durationInMillis = unit.toMillis(duration);
-        description.appendText("the date to be within ")
-            .appendValue(new Date(expectedTime - durationInMillis))
-            .appendText(" and ")
-            .appendValue(new Date(expectedTime + durationInMillis));
-    }
-
-    public BeforeWithinDateMatcher before() {
-        return new BeforeWithinDateMatcher(timeOperations, expected, duration, unit);
-    }
-
-    public AfterWithinDateMatcher after() {
-        return new AfterWithinDateMatcher(timeOperations, expected, duration, unit);
+        description.appendText("the date to be no more than ")
+            .appendText(Long.toString(duration)).appendText(" ").appendText(unit.name())
+            .appendText(" before ")
+            .appendValue(expected);
     }
 }

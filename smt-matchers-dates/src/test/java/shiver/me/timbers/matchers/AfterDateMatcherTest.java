@@ -16,101 +16,52 @@
 
 package shiver.me.timbers.matchers;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static shiver.me.timbers.data.random.RandomEnums.someEnum;
-import static shiver.me.timbers.data.random.RandomLongs.someLong;
+import static shiver.me.timbers.data.random.RandomTimes.someTime;
 
 public class AfterDateMatcherTest {
 
-    private TimeOperations timeOperations;
-
-    @Before
-    public void setUp() {
-        timeOperations = mock(TimeOperations.class);
-    }
-
     @Test
-    public void Can_check_that_a_date_is_within_a_range_after_another_date() {
-
-        final Date date1 = mock(Date.class);
-        final Date date2 = mock(Date.class);
-        final Long duration = someLong();
-        final TimeUnit unit = someEnum(TimeUnit.class);
-
-        final long durationInMillis = unit.toMillis(duration);
-
-        final long dateTime1 = someLong();
-        final long dateTime2 = someLong();
+    public void Can_check_that_a_date_is_after_another_date() {
 
         // Given
-        given(date1.getTime()).willReturn(dateTime1);
-        given(date2.getTime()).willReturn(dateTime2);
-        given(timeOperations.isAfter(dateTime1, dateTime2)).willReturn(true);
-        given(timeOperations.isBefore(dateTime1 + durationInMillis, dateTime2)).willReturn(true);
+        final Date date1 = someTime();
+        final Date date2 = new Date(date1.getTime() + 1);
 
         // When
-        final boolean actual = new AfterDateMatcher(timeOperations, date1, duration, unit).matches(date2);
+        final boolean actual = new AfterDateMatcher(date1).matches(date2);
 
         // Then
         assertThat(actual, is(true));
     }
 
     @Test
-    public void Can_check_that_a_date_is_before_a_range_after_another_date() {
-
-        final Date date1 = mock(Date.class);
-        final Date date2 = mock(Date.class);
-        final Long duration = someLong();
-        final TimeUnit unit = someEnum(TimeUnit.class);
-
-        final long durationInMillis = unit.toMillis(duration);
-
-        final long dateTime1 = someLong();
-        final long dateTime2 = someLong();
+    public void Can_check_that_a_date_is_not_after_another_date() {
 
         // Given
-        given(date1.getTime()).willReturn(dateTime1);
-        given(date2.getTime()).willReturn(dateTime2);
-        given(timeOperations.isAfter(dateTime1, dateTime2)).willReturn(false);
-        given(timeOperations.isBefore(dateTime1 + durationInMillis, dateTime2)).willReturn(true);
+        final Date date1 = someTime();
+        final Date date2 = new Date(date1.getTime() - 1);
 
         // When
-        final boolean actual = new AfterDateMatcher(timeOperations, date1, duration, unit).matches(date2);
+        final boolean actual = new AfterDateMatcher(date1).matches(date2);
 
         // Then
         assertThat(actual, is(false));
     }
 
     @Test
-    public void Can_check_that_a_date_is_after_a_range_after_another_date() {
-
-        final Date date1 = mock(Date.class);
-        final Date date2 = mock(Date.class);
-        final Long duration = someLong();
-        final TimeUnit unit = someEnum(TimeUnit.class);
-
-        final long durationInMillis = unit.toMillis(duration);
-
-        final long dateTime1 = someLong();
-        final long dateTime2 = someLong();
+    public void Can_check_that_a_date_is_not_after_another_date_when_it_is_the_same_date() {
 
         // Given
-        given(date1.getTime()).willReturn(dateTime1);
-        given(date2.getTime()).willReturn(dateTime2);
-        given(timeOperations.isAfter(dateTime1, dateTime2)).willReturn(true);
-        given(timeOperations.isBefore(dateTime1 + durationInMillis, dateTime2)).willReturn(false);
+        final Date date = someTime();
 
         // When
-        final boolean actual = new AfterDateMatcher(timeOperations, date1, duration, unit).matches(date2);
+        final boolean actual = new AfterDateMatcher(date).matches(date);
 
         // Then
         assertThat(actual, is(false));

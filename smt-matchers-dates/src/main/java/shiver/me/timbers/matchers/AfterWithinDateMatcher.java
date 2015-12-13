@@ -17,40 +17,38 @@
 package shiver.me.timbers.matchers;
 
 import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * An equality date specific matcher that can be further customised to better fit the testing scenario.
+ * A matcher to check that a {@link Date} falls after another date and within a specified duration.
  *
  * @author Karl Bennett
  */
-public class DateMatcher extends TypeSafeMatcher<Date> {
+public class AfterWithinDateMatcher extends TimeOperationsDateMatcher {
 
-    private final TimeOperations timeOperations;
     private final Date expected;
+    private final Long duration;
+    private final TimeUnit unit;
 
-    public DateMatcher(TimeOperations timeOperations, Date expected) {
-        this.timeOperations = timeOperations;
+    public AfterWithinDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
+        super(timeOperations, expected, duration, unit);
         this.expected = expected;
+        this.duration = duration;
+        this.unit = unit;
     }
 
     @Override
-    protected boolean matchesSafely(Date actual) {
-        return expected.equals(actual);
+    protected boolean matchesTime(TimeOperations timeOperations, long expected, long duration, long actual) {
+        return timeOperations.isAfter(expected, actual) && timeOperations.isBefore(expected + duration, actual);
     }
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("the date to be ").appendValue(expected);
-    }
-
-    /**
-     * Allow a duration around the expected date that the actual date may fall within.
-     */
-    public WithinDateMatcher within(Long duration, TimeUnit unit) {
-        return new WithinDateMatcher(timeOperations, expected, duration, unit);
+        description.appendText("the date to be no more than ")
+            .appendText(Long.toString(duration)).appendText(" ").appendText(unit.name())
+            .appendText(" after ")
+            .appendValue(expected);
     }
 }
