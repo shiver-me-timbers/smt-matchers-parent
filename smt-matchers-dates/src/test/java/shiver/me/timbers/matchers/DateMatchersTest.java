@@ -140,7 +140,35 @@ public class DateMatchersTest {
     }
 
     @Test
-    public void Can_check_that_a_date_falls_close_to_before_another_date() {
+    public void Can_check_that_a_date_falls_before_another_date() {
+
+        // Given
+        final Date expected = someTime();
+        final Date actual = new Date(expected.getTime() - 1);
+
+        // Then
+        assertThat(actual, fallsBefore(expected));
+    }
+
+    @Test
+    public void Can_check_that_a_date_does_not_fall_before_another_date() {
+
+        // Given
+        final Date expected = someTime();
+        final Date actual = new Date(expected.getTime() + 1);
+        beforeErrorTemplate.execute(writer, new HashMap<String, Object>() {{
+            put("expected", expected);
+            put("actual", actual);
+        }});
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage(writer.toString());
+
+        // Then
+        assertThat(actual, fallsBefore(expected));
+    }
+
+    @Test
+    public void Can_check_that_a_date_falls_before_and_close_to_another_date() {
 
         // Given
         final Long date1 = somePositiveLong();
@@ -153,7 +181,7 @@ public class DateMatchersTest {
         final Date actual = new Date(date2);
 
         // Then
-        assertThat(actual, fallsOn(expected).within(duration, unit).before());
+        assertThat(actual, fallsBefore(expected).within(duration, unit));
     }
 
     @Test
@@ -178,49 +206,7 @@ public class DateMatchersTest {
         expectedException.expectMessage(writer.toString());
 
         // Then
-        assertThat(actual, fallsOn(expected).within(duration, unit).before());
-    }
-
-    @Test
-    public void Can_check_that_a_date_falls_close_to_after_another_date() {
-
-        // Given
-        final Long date1 = somePositiveLong();
-        final Long duration = someLongBetween(0L, 1000L);
-        final TimeUnit unit = someEnum(TimeUnit.class);
-        final Long durationInMilliseconds = unit.toMillis(duration);
-        final Long difference = someLongBetween(0L, durationInMilliseconds);
-        final Long date2 = date1 + difference;
-        final Date expected = new Date(date1);
-        final Date actual = new Date(date2);
-
-        // Then
-        assertThat(actual, fallsOn(expected).within(duration, unit).after());
-    }
-
-    @Test
-    public void Can_check_that_a_date_falls_too_far_after_another_date() {
-
-        // Given
-        final Long date1 = somePositiveLong();
-        final Long duration = someLongBetween(0L, 1000L);
-        final TimeUnit unit = someEnum(TimeUnit.class);
-        final long durationInMillis = unit.toMillis(duration);
-        final Long difference = durationInMillis + 1;
-        final Long date2 = date1 + difference;
-        final Date expected = new Date(date1);
-        final Date actual = new Date(date2);
-        afterWithinErrorTemplate.execute(writer, new HashMap<String, Object>() {{
-            put("duration", duration);
-            put("unit", unit);
-            put("expected", expected);
-            put("actual", actual);
-        }});
-        expectedException.expect(AssertionError.class);
-        expectedException.expectMessage(writer.toString());
-
-        // Then
-        assertThat(actual, fallsOn(expected).within(duration, unit).after());
+        assertThat(actual, fallsBefore(expected).within(duration, unit));
     }
 
     @Test
@@ -252,23 +238,37 @@ public class DateMatchersTest {
     }
 
     @Test
-    public void Can_check_that_a_date_falls_before_another_date() {
+    public void Can_check_that_a_date_falls_close_to_after_another_date() {
 
         // Given
-        final Date expected = someTime();
-        final Date actual = new Date(expected.getTime() - 1);
+        final Long date1 = somePositiveLong();
+        final Long duration = someLongBetween(0L, 1000L);
+        final TimeUnit unit = someEnum(TimeUnit.class);
+        final Long durationInMilliseconds = unit.toMillis(duration);
+        final Long difference = someLongBetween(0L, durationInMilliseconds);
+        final Long date2 = date1 + difference;
+        final Date expected = new Date(date1);
+        final Date actual = new Date(date2);
 
         // Then
-        assertThat(actual, fallsBefore(expected));
+        assertThat(actual, fallsAfter(expected).within(duration, unit));
     }
 
     @Test
-    public void Can_check_that_a_date_does_not_fall_before_another_date() {
+    public void Can_check_that_a_date_falls_too_far_after_another_date() {
 
         // Given
-        final Date expected = someTime();
-        final Date actual = new Date(expected.getTime() + 1);
-        beforeErrorTemplate.execute(writer, new HashMap<String, Object>() {{
+        final Long date1 = somePositiveLong();
+        final Long duration = someLongBetween(0L, 1000L);
+        final TimeUnit unit = someEnum(TimeUnit.class);
+        final long durationInMillis = unit.toMillis(duration);
+        final Long difference = durationInMillis + 1;
+        final Long date2 = date1 + difference;
+        final Date expected = new Date(date1);
+        final Date actual = new Date(date2);
+        afterWithinErrorTemplate.execute(writer, new HashMap<String, Object>() {{
+            put("duration", duration);
+            put("unit", unit);
             put("expected", expected);
             put("actual", actual);
         }});
@@ -276,6 +276,6 @@ public class DateMatchersTest {
         expectedException.expectMessage(writer.toString());
 
         // Then
-        assertThat(actual, fallsBefore(expected));
+        assertThat(actual, fallsAfter(expected).within(duration, unit));
     }
 }

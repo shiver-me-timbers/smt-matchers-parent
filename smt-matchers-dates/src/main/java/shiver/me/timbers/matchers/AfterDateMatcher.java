@@ -20,6 +20,7 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A matcher to check that a {@link Date} falls after another date.
@@ -28,9 +29,11 @@ import java.util.Date;
  */
 public class AfterDateMatcher extends TypeSafeMatcher<Date> {
 
+    private final TimeOperations timeOperations;
     private final Date expected;
 
-    public AfterDateMatcher(Date expected) {
+    public AfterDateMatcher(TimeOperations timeOperations, Date expected) {
+        this.timeOperations = timeOperations;
         this.expected = expected;
     }
 
@@ -42,5 +45,12 @@ public class AfterDateMatcher extends TypeSafeMatcher<Date> {
     @Override
     public void describeTo(Description description) {
         description.appendText("the date to after ").appendValue(expected);
+    }
+
+    /**
+     * Allow a duration after and including the expected date that the actual date may fall within.
+     */
+    public AfterWithinDateMatcher within(Long duration, TimeUnit unit) {
+        return new AfterWithinDateMatcher(timeOperations, expected, duration, unit);
     }
 }

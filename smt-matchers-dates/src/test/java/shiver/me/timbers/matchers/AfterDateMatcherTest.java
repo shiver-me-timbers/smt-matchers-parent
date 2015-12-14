@@ -16,15 +16,29 @@
 
 package shiver.me.timbers.matchers;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static shiver.me.timbers.data.random.RandomEnums.someEnum;
+import static shiver.me.timbers.data.random.RandomLongs.someLong;
 import static shiver.me.timbers.data.random.RandomTimes.someTime;
 
 public class AfterDateMatcherTest {
+
+    private TimeOperations timeOperations;
+
+    @Before
+    public void setUp() {
+        timeOperations = mock(TimeOperations.class);
+    }
 
     @Test
     public void Can_check_that_a_date_is_after_another_date() {
@@ -34,7 +48,7 @@ public class AfterDateMatcherTest {
         final Date date2 = new Date(date1.getTime() + 1);
 
         // When
-        final boolean actual = new AfterDateMatcher(date1).matches(date2);
+        final boolean actual = new AfterDateMatcher(timeOperations, date1).matches(date2);
 
         // Then
         assertThat(actual, is(true));
@@ -48,7 +62,7 @@ public class AfterDateMatcherTest {
         final Date date2 = new Date(date1.getTime() - 1);
 
         // When
-        final boolean actual = new AfterDateMatcher(date1).matches(date2);
+        final boolean actual = new AfterDateMatcher(timeOperations, date1).matches(date2);
 
         // Then
         assertThat(actual, is(false));
@@ -61,9 +75,24 @@ public class AfterDateMatcherTest {
         final Date date = someTime();
 
         // When
-        final boolean actual = new AfterDateMatcher(date).matches(date);
+        final boolean actual = new AfterDateMatcher(timeOperations, date).matches(date);
 
         // Then
         assertThat(actual, is(false));
+    }
+
+    @Test
+    public void Can_create_a_after_date_matcher() {
+
+        // Given
+        final Date date = mock(Date.class);
+        final Long duration = someLong();
+        final TimeUnit unit = someEnum(TimeUnit.class);
+
+        // When
+        final AfterWithinDateMatcher actual = new AfterDateMatcher(timeOperations, date).within(duration, unit);
+
+        // Then
+        assertThat(actual, not(nullValue()));
     }
 }

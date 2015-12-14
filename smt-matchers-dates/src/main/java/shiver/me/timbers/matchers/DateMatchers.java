@@ -33,10 +33,10 @@ public class DateMatchers {
     }
 
     public static AfterDateMatcher fallsAfter(Date expected) {
-        return new AfterDateMatcher(expected);
+        return new AfterDateMatcher(new TimeOperations(), expected);
     }
 
     public static BeforeDateMatcher fallsBefore(Date expected) {
-        return new BeforeDateMatcher(expected);
+        return new BeforeDateMatcher(new TimeOperations(), expected);
     }
 }

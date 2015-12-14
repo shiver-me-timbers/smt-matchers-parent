@@ -23,8 +23,6 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -116,35 +114,5 @@ public class WithinDateMatcherTest {
 
         // Then
         assertThat(actual, is(false));
-    }
-
-    @Test
-    public void Can_create_a_before_date_matcher() {
-
-        // Given
-        final Date date = mock(Date.class);
-        final Long duration = someLong();
-        final TimeUnit unit = someEnum(TimeUnit.class);
-
-        // When
-        final BeforeWithinDateMatcher actual = new WithinDateMatcher(timeOperations, date, duration, unit).before();
-
-        // Then
-        assertThat(actual, not(nullValue()));
-    }
-
-    @Test
-    public void Can_create_a_after_date_matcher() {
-
-        // Given
-        final Date date = mock(Date.class);
-        final Long duration = someLong();
-        final TimeUnit unit = someEnum(TimeUnit.class);
-
-        // When
-        final AfterWithinDateMatcher actual = new WithinDateMatcher(timeOperations, date, duration, unit).after();
-
-        // Then
-        assertThat(actual, not(nullValue()));
     }
 }

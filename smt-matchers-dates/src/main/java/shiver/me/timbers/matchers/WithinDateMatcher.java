@@ -56,12 +56,4 @@ public class WithinDateMatcher extends TimeOperationsDateMatcher {
             .appendText(" and ")
             .appendValue(new Date(expectedTime + durationInMillis));
     }
-
-    public BeforeWithinDateMatcher before() {
-        return new BeforeWithinDateMatcher(timeOperations, expected, duration, unit);
-    }
-
-    public AfterWithinDateMatcher after() {
-        return new AfterWithinDateMatcher(timeOperations, expected, duration, unit);
-    }
 }
