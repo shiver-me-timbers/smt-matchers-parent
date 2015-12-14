@@ -26,17 +26,23 @@ import java.util.Date;
 public class DateMatchers {
 
     /**
+     * Check that they actual date is before the expected.
+     */
+    public static BeforeDateMatcher fallsBefore(Date expected) {
+        return new BeforeDateMatcher(new TimeOperations(), expected);
+    }
+
+    /**
      * Check that they actual date is equal to the expected.
      */
     public static OnDateMatcher fallsOn(final Date expected) {
         return new OnDateMatcher(new TimeOperations(), expected);
     }
 
+    /**
+     * Check that they actual date is after the expected.
+     */
     public static AfterDateMatcher fallsAfter(Date expected) {
         return new AfterDateMatcher(new TimeOperations(), expected);
-    }
-
-    public static BeforeDateMatcher fallsBefore(Date expected) {
-        return new BeforeDateMatcher(new TimeOperations(), expected);
     }
 }
