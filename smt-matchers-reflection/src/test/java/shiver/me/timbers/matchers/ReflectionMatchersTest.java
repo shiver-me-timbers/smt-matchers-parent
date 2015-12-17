@@ -35,6 +35,7 @@ import static shiver.me.timbers.data.random.RandomLongs.someLong;
 import static shiver.me.timbers.data.random.RandomStrings.someAlphaNumericString;
 import static shiver.me.timbers.matchers.ReflectionMatchers.hasField;
 import static shiver.me.timbers.matchers.ReflectionMatchers.hasFieldThat;
+import static shiver.me.timbers.matchers.ReflectionMatchers.hasPropertyThat;
 
 public class ReflectionMatchersTest {
 
@@ -191,5 +192,25 @@ public class ReflectionMatchersTest {
 
         // Then
         assertThat(object, hasField(fieldName, expected));
+    }
+
+    @Test
+    public void Can_apply_a_matcher_to_a_property() {
+
+        // Given
+        final Long expected = someLong();
+        class AClass {
+            private final long three = expected;
+        }
+        class BClass {
+            private final AClass two = new AClass();
+        }
+        class CClass {
+            private final BClass one = new BClass();
+        }
+        final CClass object = new CClass();
+
+        // Then
+        assertThat(object, hasPropertyThat("one.two.three", equalTo(expected)));
     }
 }

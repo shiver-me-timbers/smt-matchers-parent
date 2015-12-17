@@ -17,6 +17,7 @@
 package shiver.me.timbers.matchers;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 
 /**
  * @author Karl Bennett
@@ -30,6 +31,11 @@ public class Reflections {
         return (T) field.get(object);
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T getPropertyValue(String property, Object object) throws NoSuchFieldException, IllegalAccessException {
+        return (T) findProperty(property.split("\\."), object);
+    }
+
     private Field findDeclaredField(String name, Class type) throws NoSuchFieldException {
         try {
             return type.getDeclaredField(name);
@@ -40,5 +46,14 @@ public class Reflections {
             }
             throw e;
         }
+    }
+
+    private Object findProperty(String[] fieldNames, Object actual)
+        throws NoSuchFieldException, IllegalAccessException {
+        final Object value = getFieldValue(fieldNames[0], actual);
+        if (fieldNames.length == 1) {
+            return value;
+        }
+        return findProperty(Arrays.copyOfRange(fieldNames, 1, fieldNames.length), value);
     }
 }

@@ -16,6 +16,7 @@
 
 package shiver.me.timbers.matchers;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
@@ -23,6 +24,13 @@ import static org.junit.Assert.assertThat;
 import static shiver.me.timbers.data.random.RandomStrings.someString;
 
 public class ReflectionsTest {
+
+    private Reflections reflections;
+
+    @Before
+    public void setUp() {
+        reflections = new Reflections();
+    }
 
     @Test
     public void Can_get_the_value_of_a_field() throws NoSuchFieldException, IllegalAccessException {
@@ -34,7 +42,7 @@ public class ReflectionsTest {
         }
 
         // When
-        final String actual = new Reflections().getFieldValue("fieldName", new AClass());
+        final String actual = reflections.getFieldValue("fieldName", new AClass());
 
         // Then
         assertThat(actual, is(expected));
@@ -52,7 +60,58 @@ public class ReflectionsTest {
         }
 
         // When
-        final String actual = new Reflections().getFieldValue("fieldName", new BClass());
+        final String actual = reflections.getFieldValue("fieldName", new BClass());
+
+        // Then
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void Can_get_the_value_of_a_property() throws NoSuchFieldException, IllegalAccessException {
+
+        // Given
+        final String expected = someString();
+        class AClass {
+            private final String three = expected;
+        }
+        class BClass {
+            private final AClass two = new AClass();
+        }
+        class CClass {
+            private final BClass one = new BClass();
+        }
+
+        // When
+        final String actual = reflections.getPropertyValue("one.two.three", new CClass());
+
+        // Then
+        assertThat(actual, is(expected));
+    }
+
+    @Test
+    public void Can_get_the_value_of_a_property_from_a_super_class()
+        throws NoSuchFieldException, IllegalAccessException {
+
+        // Given
+        final String expected = someString();
+        class AClass {
+            private final String three = expected;
+        }
+        class BClass {
+            private final AClass two = new AClass();
+        }
+        class CClass extends BClass {
+        }
+        class DClass extends CClass {
+        }
+        class EClass {
+            private final DClass one = new DClass();
+        }
+        class FClass extends EClass {
+        }
+
+        // When
+        final String actual = reflections.getPropertyValue("one.two.three", new FClass());
 
         // Then
         assertThat(actual, is(expected));

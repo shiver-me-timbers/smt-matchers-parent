@@ -41,4 +41,11 @@ public class ReflectionMatchers {
     public static <T> FieldMatcher<T> hasField(String fieldName, Object expected) {
         return FieldMatcher.hasFieldThat(fieldName, equalTo(expected));
     }
+
+    /**
+     * Check the that the properties (e.g. "one.two.three") value matches the supplied value.
+     */
+    public static <T> PropertyMatcher<T> hasPropertyThat(String property, Matcher matcher) {
+        return PropertyMatcher.hasPropertyThat(property, matcher);
+    }
 }

@@ -21,32 +21,32 @@ import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 
 /**
- * Matches the value of a field with a given name within an object.
+ * Matches the value of a given property (e.g. "one.two.three") that starts within an object.
  *
  * @author Karl Bennett
  */
-public class FieldMatcher<T> extends DescribingMatcher<T> {
-
-    @Factory
-    public static <T> FieldMatcher<T> hasFieldThat(String fieldName, Matcher matcher) {
-        return new FieldMatcher<>(new Reflections(), fieldName, matcher);
-    }
+public class PropertyMatcher<T> extends DescribingMatcher<T> {
 
     private final Reflections reflections;
-    private final String fieldName;
+    private final String property;
     private final Matcher matcher;
 
-    public FieldMatcher(Reflections reflections, String fieldName, Matcher matcher) {
+    @Factory
+    public static <T> PropertyMatcher<T> hasPropertyThat(String property, Matcher matcher) {
+        return new PropertyMatcher<>(new Reflections(), property, matcher);
+    }
+
+    public PropertyMatcher(Reflections reflections, String property, Matcher matcher) {
         this.reflections = reflections;
-        this.fieldName = fieldName;
+        this.property = property;
         this.matcher = matcher;
     }
 
     @Override
-    protected boolean matchesSafely(final T actual) {
+    protected boolean matchesSafely(T actual) {
         try {
             describeFailedMatcher(actual);
-            return matcher.matches(reflections.getFieldValue(fieldName, actual));
+            return matcher.matches(reflections.getPropertyValue(property, actual));
         } catch (NoSuchFieldException e) {
             describeMissingField(actual);
         } catch (IllegalAccessException e) {
@@ -59,15 +59,13 @@ public class FieldMatcher<T> extends DescribingMatcher<T> {
         assignDescribers(
             new DescribeTo() {
                 public void describeTo(Description description) {
-                    description.appendText("class ").appendText(actual.getClass().getName())
-                        .appendText(" to contain a field named ").appendText(fieldName).appendText(" that is ")
-                        .appendDescriptionOf(matcher);
+                    throw new UnsupportedOperationException();
                 }
             },
             new DescribeMismatch() {
                 @Override
                 public void describeMismatch(Description description) {
-                    description.appendText("the field does not match.");
+                    throw new UnsupportedOperationException();
                 }
             }
         );
@@ -77,14 +75,13 @@ public class FieldMatcher<T> extends DescribingMatcher<T> {
         assignDescribers(
             new DescribeTo() {
                 public void describeTo(Description description) {
-                    description.appendText("class ").appendText(actual.getClass().getName())
-                        .appendText(" to contain a field named ").appendText(fieldName).appendText(".");
+                    throw new UnsupportedOperationException();
                 }
             },
             new DescribeMismatch() {
                 @Override
                 public void describeMismatch(Description description) {
-                    description.appendText("the field does not exist.");
+                    throw new UnsupportedOperationException();
                 }
             }
         );
@@ -94,14 +91,13 @@ public class FieldMatcher<T> extends DescribingMatcher<T> {
         assignDescribers(
             new DescribeTo() {
                 public void describeTo(Description description) {
-                    description.appendText("to be able to access the filed named ").appendText(fieldName)
-                        .appendText(" in class ").appendText(actual.getClass().getName()).appendText(".");
+                    throw new UnsupportedOperationException();
                 }
             },
             new DescribeMismatch() {
                 @Override
                 public void describeMismatch(Description description) {
-                    description.appendText("the field is inaccessible.");
+                    throw new UnsupportedOperationException();
                 }
             }
         );
