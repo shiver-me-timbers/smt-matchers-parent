@@ -82,7 +82,11 @@
                 <groupId>com.github.shiver-me-timbers</groupId>
                 <artifactId>smt-random</artifactId>
                 <version>1.7</version>
-                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.github.spullara.mustache.java</groupId>
+                <artifactId>compiler</artifactId>
+                <version>0.8.18</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -96,6 +100,7 @@
 
     <modules>
         <module>smt-matchers-dates</module>
+        <module>smt-matchers-reflection</module>
     </modules>
 
     <scm>
