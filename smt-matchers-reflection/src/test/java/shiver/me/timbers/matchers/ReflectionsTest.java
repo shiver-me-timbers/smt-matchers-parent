@@ -58,9 +58,11 @@ public class ReflectionsTest {
         }
         class BClass extends AClass {
         }
+        class CClass extends BClass {
+        }
 
         // When
-        final String actual = reflections.getFieldValue("fieldName", new BClass());
+        final String actual = reflections.getFieldValue("fieldName", new CClass());
 
         // Then
         assertThat(actual, is(expected));

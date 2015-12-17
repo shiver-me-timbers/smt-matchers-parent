@@ -76,22 +76,6 @@ public class ReflectionMatchersTest {
     }
 
     @Test
-    public void Can_apply_a_matcher_to_a_super_classes_field() {
-
-        // Given
-        final Long expected = someLong();
-        class AClass {
-            private final long fieldName = expected;
-        }
-        class BClass extends AClass {
-        }
-        final BClass object = new BClass();
-
-        // Then
-        assertThat(object, hasFieldThat("fieldName", equalTo(expected)));
-    }
-
-    @Test
     public void Can_get_a_meaningful_assertion_error_message_when_the_matcher_fails() {
 
         // Given
