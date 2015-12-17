@@ -17,6 +17,7 @@
 package shiver.me.timbers.matchers;
 
 import org.hamcrest.Description;
+import org.hamcrest.Factory;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.Date;
@@ -28,6 +29,11 @@ import java.util.concurrent.TimeUnit;
  * @author Karl Bennett
  */
 public class AfterDateMatcher extends TypeSafeMatcher<Date> {
+
+    @Factory
+    public static AfterDateMatcher fallsAfter(Date expected) {
+        return new AfterDateMatcher(new TimeOperations(), expected);
+    }
 
     private final TimeOperations timeOperations;
     private final Date expected;

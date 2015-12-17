@@ -44,7 +44,7 @@ public class DateMatchersTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private Mustache errorTemplate;
+    private Mustache onErrorTemplate;
     private Mustache withinErrorTemplate;
     private Mustache beforeWithinErrorTemplate;
     private Mustache afterWithinErrorTemplate;
@@ -55,7 +55,7 @@ public class DateMatchersTest {
     @Before
     public void setUp() {
         final DefaultMustacheFactory mustacheFactory = new DefaultMustacheFactory(new ClasspathResolver());
-        errorTemplate = mustacheFactory.compile("invalid-date-error-message.mustache");
+        onErrorTemplate = mustacheFactory.compile("invalid-date-error-message.mustache");
         withinErrorTemplate = mustacheFactory.compile("invalid-within-date-error-message.mustache");
         beforeWithinErrorTemplate = mustacheFactory.compile("invalid-before-within-date-error-message.mustache");
         afterWithinErrorTemplate = mustacheFactory.compile("invalid-after-within-date-error-message.mustache");
@@ -85,7 +85,7 @@ public class DateMatchersTest {
         // Given
         final Date expected = someTime();
         final Date actual = someTime();
-        errorTemplate.execute(writer, new HashMap<String, Date>() {{
+        onErrorTemplate.execute(writer, new HashMap<String, Date>() {{
             put("expected", expected);
             put("actual", actual);
         }});
