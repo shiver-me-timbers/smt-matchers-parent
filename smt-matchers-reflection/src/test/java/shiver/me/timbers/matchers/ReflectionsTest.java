@@ -68,6 +68,33 @@ public class ReflectionsTest {
         assertThat(actual, is(expected));
     }
 
+    @Test(expected = NoSuchFieldException.class)
+    public void Can_fail_to_get_the_value_of_a_field() throws NoSuchFieldException, IllegalAccessException {
+
+        // Given
+        class AClass {
+        }
+
+        // When
+        reflections.getFieldValue("fieldName", new AClass());
+    }
+
+    @Test(expected = NoSuchFieldException.class)
+    public void Can_fail_to_get_the_value_of_a_field_from_a_super_class()
+        throws NoSuchFieldException, IllegalAccessException {
+
+        // Given
+        class AClass {
+        }
+        class BClass extends AClass {
+        }
+        class CClass extends BClass {
+        }
+
+        // When
+        reflections.getFieldValue("fieldName", new CClass());
+    }
+
     @Test
     public void Can_get_the_value_of_a_property() throws NoSuchFieldException, IllegalAccessException {
 
@@ -117,5 +144,46 @@ public class ReflectionsTest {
 
         // Then
         assertThat(actual, is(expected));
+    }
+
+    @Test(expected = NoSuchFieldException.class)
+    public void Can_fail_to_get_the_value_of_a_property() throws NoSuchFieldException, IllegalAccessException {
+
+        // Given
+        class AClass {
+        }
+        class BClass {
+            private final AClass two = new AClass();
+        }
+        class CClass {
+            private final BClass one = new BClass();
+        }
+
+        // When
+        reflections.getPropertyValue("one.two.three", new CClass());
+    }
+
+    @Test(expected = NoSuchFieldException.class)
+    public void Can_fail_to_get_the_value_of_a_property_from_a_super_class()
+        throws NoSuchFieldException, IllegalAccessException {
+
+        // Given
+        class AClass {
+        }
+        class BClass {
+            private final AClass two = new AClass();
+        }
+        class CClass extends BClass {
+        }
+        class DClass extends CClass {
+        }
+        class EClass {
+            private final DClass one = new DClass();
+        }
+        class FClass extends EClass {
+        }
+
+        // When
+        reflections.getPropertyValue("one.two.three", new FClass());
     }
 }
