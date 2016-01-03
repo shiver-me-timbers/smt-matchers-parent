@@ -17,7 +17,6 @@
 package shiver.me.timbers.matchers;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 
 /**
  * @author Karl Bennett
@@ -32,8 +31,9 @@ public class Reflections {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getPropertyValue(String property, Object object) throws NoSuchFieldException, IllegalAccessException {
-        return (T) findProperty(property.split("\\."), object);
+    public <T> T getPropertyValue(String property, Object object)
+        throws NoSuchPropertyException {
+        return (T) findProperty(property, property.split("\\."), 0, object, object);
     }
 
     private Field findDeclaredField(String name, Class type) throws NoSuchFieldException {
@@ -48,12 +48,27 @@ public class Reflections {
         }
     }
 
-    private Object findProperty(String[] fieldNames, Object actual)
-        throws NoSuchFieldException, IllegalAccessException {
-        final Object value = getFieldValue(fieldNames[0], actual);
-        if (fieldNames.length == 1) {
+    private Object findProperty(String property, String[] fieldNames, int index, Object original, Object actual)
+        throws NoSuchPropertyException {
+        final Object value = getFieldValueForProperty(property, fieldNames, index, original, actual);
+        if (index == fieldNames.length - 1) {
             return value;
         }
-        return findProperty(Arrays.copyOfRange(fieldNames, 1, fieldNames.length), value);
+        return findProperty(property, fieldNames, ++index, original, value);
+    }
+
+    private Object getFieldValueForProperty(
+        String property,
+        String[] fieldNames,
+        int index,
+        Object original,
+        Object actual
+    )
+        throws NoSuchPropertyException {
+        try {
+            return getFieldValue(fieldNames[index], actual);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new NoSuchPropertyException(property, index, original, actual, e);
+        }
     }
 }

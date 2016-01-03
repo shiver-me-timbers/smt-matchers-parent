@@ -94,7 +94,7 @@ public class FieldMatcher<T> extends DescribingMatcher<T> {
         assignDescribers(
             new DescribeTo() {
                 public void describeTo(Description description) {
-                    description.appendText("to be able to access the filed named ").appendText(fieldName)
+                    description.appendText("to be able to access the field named ").appendText(fieldName)
                         .appendText(" in class ").appendText(actual.getClass().getName()).appendText(".");
                 }
             },

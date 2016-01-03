@@ -93,7 +93,7 @@ public class FieldMatcherTest {
     }
 
     @Test
-    public void Cannot_match_a_field_that_does_not_exist_and_give_a_meaningful_description()
+    public void Can_fail_to_match_a_field_that_does_not_exist_and_give_a_meaningful_description()
         throws NoSuchFieldException, IllegalAccessException {
 
         final AClass aClass = new AClass();
@@ -122,7 +122,7 @@ public class FieldMatcherTest {
     }
 
     @Test
-    public void Cannot_match_a_field_that_is_inaccessible_and_give_a_meaningful_description()
+    public void Can_fail_to_match_a_field_that_is_inaccessible_and_give_a_meaningful_description()
         throws NoSuchFieldException, IllegalAccessException {
 
         final AClass aClass = new AClass();
@@ -135,7 +135,7 @@ public class FieldMatcherTest {
 
         // Given
         given(reflections.getFieldValue(name, aClass)).willThrow(new IllegalAccessException());
-        given(description.appendText("to be able to access the filed named ")).willReturn(descriptionStart);
+        given(description.appendText("to be able to access the field named ")).willReturn(descriptionStart);
         given(descriptionStart.appendText(name)).willReturn(descriptionFieldName);
         given(descriptionFieldName.appendText(" in class ")).willReturn(descriptionMiddle);
         given(descriptionMiddle.appendText(aClass.getClass().getName())).willReturn(descriptionClassName);

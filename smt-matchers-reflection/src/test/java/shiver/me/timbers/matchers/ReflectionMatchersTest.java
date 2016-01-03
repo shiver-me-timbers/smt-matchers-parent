@@ -29,12 +29,14 @@ import org.junit.rules.ExpectedException;
 import java.io.StringWriter;
 import java.util.HashMap;
 
+import static java.lang.String.format;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static shiver.me.timbers.data.random.RandomLongs.someLong;
 import static shiver.me.timbers.data.random.RandomStrings.someAlphaNumericString;
 import static shiver.me.timbers.matchers.ReflectionMatchers.hasField;
 import static shiver.me.timbers.matchers.ReflectionMatchers.hasFieldThat;
+import static shiver.me.timbers.matchers.ReflectionMatchers.hasProperty;
 import static shiver.me.timbers.matchers.ReflectionMatchers.hasPropertyThat;
 
 public class ReflectionMatchersTest {
@@ -42,17 +44,19 @@ public class ReflectionMatchersTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
-    private Mustache missingFieldErrorTemplate;
     private Mustache invalidFieldErrorTemplate;
-    private Mustache notEqualFieldErrorTemplate;
+    private Mustache missingFieldErrorTemplate;
+    private Mustache invalidPropertyErrorTemplate;
+    private Mustache missingPropertyErrorTemplate;
     private StringWriter writer;
 
     @Before
     public void setUp() {
         final DefaultMustacheFactory mustacheFactory = new DefaultMustacheFactory(new ClasspathResolver());
-        missingFieldErrorTemplate = mustacheFactory.compile("missing-field-error-message.mustache");
         invalidFieldErrorTemplate = mustacheFactory.compile("invalid-field-error-message.mustache");
-        notEqualFieldErrorTemplate = mustacheFactory.compile("not-equal-field-error-message.mustache");
+        missingFieldErrorTemplate = mustacheFactory.compile("missing-field-error-message.mustache");
+        invalidPropertyErrorTemplate = mustacheFactory.compile("invalid-property-error-message.mustache");
+        missingPropertyErrorTemplate = mustacheFactory.compile("missing-property-error-message.mustache");
         writer = new StringWriter();
     }
 
@@ -76,7 +80,7 @@ public class ReflectionMatchersTest {
     }
 
     @Test
-    public void Can_get_a_meaningful_assertion_error_message_when_the_matcher_fails() {
+    public void Can_get_a_meaningful_assertion_error_message_when_the_field_matcher_fails() {
 
         // Given
         final String fieldName = "fieldName";
@@ -166,10 +170,10 @@ public class ReflectionMatchersTest {
         }
         final AClass object = new AClass(someLong());
         final Long expected = someLong();
-        notEqualFieldErrorTemplate.execute(writer, new HashMap<String, Object>() {{
+        invalidFieldErrorTemplate.execute(writer, new HashMap<String, Object>() {{
             put("class", object.getClass().getName());
             put("name", fieldName);
-            put("expected", expected.toString() + "L");
+            put("matcher", format("<%sL>", expected));
         }});
         expectedException.expect(AssertionError.class);
         expectedException.expectMessage(writer.toString());
@@ -192,9 +196,126 @@ public class ReflectionMatchersTest {
         class CClass {
             private final BClass one = new BClass();
         }
-        final CClass object = new CClass();
 
         // Then
-        assertThat(object, hasPropertyThat("one.two.three", equalTo(expected)));
+        assertThat(new CClass(), hasPropertyThat("one.two.three", equalTo(expected)));
+    }
+
+    @Test
+    public void Can_get_a_meaningful_assertion_error_message_when_the_property_matcher_fails() {
+
+        // Given
+        final String property = "one.two.three";
+        final String matcherError = someAlphaNumericString(10);
+        final TypeSafeMatcher<Long> matches = new TypeSafeMatcher<Long>() {
+            public void describeTo(Description description) {
+                description.appendText(matcherError);
+            }
+
+            protected boolean matchesSafely(Long actual) {
+                return false;
+            }
+        };
+        class AClass {
+            private long three;
+        }
+        class BClass {
+            private final AClass two = new AClass();
+        }
+        class CClass {
+            private final BClass one = new BClass();
+        }
+        final CClass object = new CClass();
+        invalidPropertyErrorTemplate.execute(writer, new HashMap<String, Object>() {{
+            put("class", CClass.class.getName());
+            put("property", property);
+            put("matcher", matcherError);
+        }});
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage(writer.toString());
+
+        // Then
+        assertThat(object, hasPropertyThat(property, matches));
+    }
+
+    @Test
+    public void Can_get_a_meaningful_assertion_error_message_when_the_property_does_not_exist() {
+
+        // Given
+        final String property = "one.two.three";
+        final String matcherError = someAlphaNumericString(10);
+        final TypeSafeMatcher<Long> matches = new TypeSafeMatcher<Long>() {
+            public void describeTo(Description description) {
+                description.appendText(matcherError);
+            }
+
+            protected boolean matchesSafely(Long actual) {
+                return false;
+            }
+        };
+        class AClass {
+        }
+        class BClass {
+            private final AClass one = new AClass();
+        }
+        final BClass object = new BClass();
+        missingPropertyErrorTemplate.execute(writer, new HashMap<String, Object>() {{
+            put("class", BClass.class.getName());
+            put("property", property);
+            put("markedProperty", "one.[two].three");
+            put("invalidClass", AClass.class.getName());
+        }});
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage(writer.toString());
+
+        // Then
+        assertThat(object, hasPropertyThat(property, matches));
+    }
+
+    @Test
+    public void Can_check_that_a_property_is_equal_to_a_value() {
+
+        // Given
+        final Long expected = someLong();
+        class AClass {
+            private final long three = expected;
+        }
+        class BClass {
+            private final AClass two = new AClass();
+        }
+        class CClass {
+            private final BClass one = new BClass();
+        }
+
+        // Then
+        assertThat(new CClass(), hasProperty("one.two.three", expected));
+    }
+
+    @Test
+    public void Can_check_that_a_property_is_not_equal_to_a_value() {
+
+        // Given
+        final String property = "one.two.three";
+        class AClass {
+            private long three;
+        }
+        class BClass {
+            private final AClass two = new AClass();
+        }
+        class CClass {
+            private final BClass one = new BClass();
+        }
+        final CClass object = new CClass();
+        final Long expected = someLong();
+        invalidPropertyErrorTemplate.execute(writer, new HashMap<String, Object>() {{
+            put("class", CClass.class.getName());
+            put("property", property);
+            put("matcher", format("<%sL>", expected));
+        }});
+        expectedException.expect(AssertionError.class);
+        expectedException.expectMessage(writer.toString());
+
+        // Then
+        assertThat(object, hasProperty(property, expected));
     }
 }

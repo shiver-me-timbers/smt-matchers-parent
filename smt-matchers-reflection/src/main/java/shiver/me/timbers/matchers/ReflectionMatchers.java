@@ -21,8 +21,8 @@ import org.hamcrest.Matcher;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 /**
- * Matchers that can be used to verify through reflection that a class contains a matching field. The matcher will check
- * the current and all super classes for the field.
+ * Matchers that can be used to verify, through reflection, that a class contains a matching field. The matcher will
+ * check the current class and all it's super classes for the field.
  *
  * @author Karl Bennett
  */
@@ -43,9 +43,16 @@ public class ReflectionMatchers {
     }
 
     /**
-     * Check the that the properties (e.g. "one.two.three") value matches the supplied value.
+     * Check the that the properties (e.g. "one.two.three") value is valid for the supplied matcher.
      */
     public static <T> PropertyMatcher<T> hasPropertyThat(String property, Matcher matcher) {
         return PropertyMatcher.hasPropertyThat(property, matcher);
+    }
+
+    /**
+     * Check the that the properties (e.g. "one.two.three") value matches the supplied value.
+     */
+    public static <T> PropertyMatcher<T> hasProperty(String property, Object expected) {
+        return PropertyMatcher.hasPropertyThat(property, equalTo(expected));
     }
 }

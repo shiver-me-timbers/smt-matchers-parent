@@ -47,10 +47,8 @@ public class PropertyMatcher<T> extends DescribingMatcher<T> {
         try {
             describeFailedMatcher(actual);
             return matcher.matches(reflections.getPropertyValue(property, actual));
-        } catch (NoSuchFieldException e) {
-            describeMissingField(actual);
-        } catch (IllegalAccessException e) {
-            describeInaccessibleField(actual);
+        } catch (NoSuchPropertyException e) {
+            describeMissingProperty(actual, e);
         }
         return false;
     }
@@ -59,45 +57,33 @@ public class PropertyMatcher<T> extends DescribingMatcher<T> {
         assignDescribers(
             new DescribeTo() {
                 public void describeTo(Description description) {
-                    throw new UnsupportedOperationException();
+                    description.appendText("class ").appendText(actual.getClass().getName())
+                        .appendText(" to contain the property ").appendText(property).appendText(" that is ")
+                        .appendDescriptionOf(matcher);
                 }
             },
             new DescribeMismatch() {
                 @Override
                 public void describeMismatch(Description description) {
-                    throw new UnsupportedOperationException();
+                    description.appendText("the property value does not match.");
                 }
             }
         );
     }
 
-    private void describeMissingField(final T actual) {
+    private void describeMissingProperty(final T actual, final NoSuchPropertyException e) {
         assignDescribers(
             new DescribeTo() {
                 public void describeTo(Description description) {
-                    throw new UnsupportedOperationException();
+                    description.appendText("class ").appendText(actual.getClass().getName())
+                        .appendText(" to contain the property ").appendText(property).appendText(".");
                 }
             },
             new DescribeMismatch() {
                 @Override
                 public void describeMismatch(Description description) {
-                    throw new UnsupportedOperationException();
-                }
-            }
-        );
-    }
-
-    private void describeInaccessibleField(final T actual) {
-        assignDescribers(
-            new DescribeTo() {
-                public void describeTo(Description description) {
-                    throw new UnsupportedOperationException();
-                }
-            },
-            new DescribeMismatch() {
-                @Override
-                public void describeMismatch(Description description) {
-                    throw new UnsupportedOperationException();
+                    description.appendText("the property was invalid at ").appendText(e.getMarkedProperty())
+                        .appendText(" in class ").appendText(e.getErrorObject().getClass().getName()).appendText(".");
                 }
             }
         );
