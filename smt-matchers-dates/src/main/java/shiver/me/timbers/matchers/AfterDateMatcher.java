@@ -30,15 +30,33 @@ import java.util.concurrent.TimeUnit;
  */
 public class AfterDateMatcher extends TypeSafeMatcher<Date> {
 
+    /**
+     * Check that the actual date is after the expected.
+     */
     @Factory
     public static AfterDateMatcher fallsAfter(Date expected) {
-        return new AfterDateMatcher(new TimeOperations(), expected);
+        return new AfterDateMatcher(expected);
+    }
+
+    /**
+     * Check that the actual date falls after the expected date within a supplied duration.
+     * <p>
+     * Note: This method is supplied to make the "within" feature more discoverable. It is also possible to call the
+     * {@link AfterDateMatcher#within} method on the {@link AfterDateMatcher} returned by the {@link #fallsAfter(Date)}
+     * method e.g. {@code assertThat(actual, fallsAfter(expected).within(duration, unit));}
+     */
+    public static AfterWithinDateMatcher fallsAfter(Date expected, Within within) {
+        return AfterDateMatcher.fallsAfter(expected).within(within.getDuration(), within.getUnit());
     }
 
     private final TimeOperations timeOperations;
     private final Date expected;
 
-    public AfterDateMatcher(TimeOperations timeOperations, Date expected) {
+    public AfterDateMatcher(Date expected) {
+        this(new TimeOperations(), expected);
+    }
+
+    AfterDateMatcher(TimeOperations timeOperations, Date expected) {
         this.timeOperations = timeOperations;
         this.expected = expected;
     }

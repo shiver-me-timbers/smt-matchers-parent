@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Karl Bennett
+ * Copyright 2016 Karl Bennett
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,32 @@
 
 package shiver.me.timbers.matchers;
 
+import java.util.concurrent.TimeUnit;
+
 /**
+ * This class is a simple holder for the within duration values.
+ *
  * @author Karl Bennett
  */
-class TimeOperations {
+public class Within {
 
-    boolean isBefore(long expected, long actual) {
-        return expected >= actual;
+    public static Within within(Long duration, TimeUnit unit) {
+        return new Within(duration, unit);
     }
 
-    boolean isAfter(long expected, long actual) {
-        return expected <= actual;
+    private final Long duration;
+    private final TimeUnit unit;
+
+    private Within(Long duration, TimeUnit unit) {
+        this.duration = duration;
+        this.unit = unit;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public TimeUnit getUnit() {
+        return unit;
     }
 }

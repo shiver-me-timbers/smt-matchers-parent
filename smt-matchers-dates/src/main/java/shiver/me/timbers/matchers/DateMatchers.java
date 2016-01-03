@@ -33,6 +33,17 @@ public class DateMatchers {
     }
 
     /**
+     * Check that the actual date falls before the expected date within a supplied duration.
+     * <p>
+     * Note: This method is supplied to make the "within" feature more discoverable. It is also possible to call the
+     * {@link BeforeDateMatcher#within} method on the {@link BeforeDateMatcher} returned by the
+     * {@link #fallsBefore(Date)} method e.g. {@code assertThat(actual, fallsBefore(expected).within(duration, unit));}
+     */
+    public static BeforeWithinDateMatcher fallsBefore(Date expected, Within within) {
+        return BeforeDateMatcher.fallsBefore(expected, within);
+    }
+
+    /**
      * Check that the actual date is equal to the expected.
      */
     public static OnDateMatcher fallsOn(final Date expected) {
@@ -40,9 +51,31 @@ public class DateMatchers {
     }
 
     /**
+     * Check that the actual date falls within the supplied duration before or after the expected date.
+     * <p>
+     * Note: This method is supplied to make the "within" feature more discoverable. It is also possible to call the
+     * {@link OnDateMatcher#within} method on the {@link OnDateMatcher} returned by the {@link #fallsOn(Date)} method
+     * e.g. {@code assertThat(actual, fallsOn(expected).within(duration, unit));}
+     */
+    public static WithinDateMatcher fallsOn(Date expected, Within within) {
+        return OnDateMatcher.fallsOn(expected, within);
+    }
+
+    /**
      * Check that the actual date is after the expected.
      */
     public static AfterDateMatcher fallsAfter(Date expected) {
         return AfterDateMatcher.fallsAfter(expected);
+    }
+
+    /**
+     * Check that the actual date falls after the expected date within a supplied duration.
+     * <p>
+     * Note: This method is supplied to make the "within" feature more discoverable. It is also possible to call the
+     * {@link AfterDateMatcher#within} method on the {@link AfterDateMatcher} returned by the {@link #fallsAfter(Date)}
+     * method e.g. {@code assertThat(actual, fallsAfter(expected).within(duration, unit));}
+     */
+    public static AfterWithinDateMatcher fallsAfter(Date expected, Within within) {
+        return AfterDateMatcher.fallsAfter(expected, within);
     }
 }

@@ -30,15 +30,33 @@ import java.util.concurrent.TimeUnit;
  */
 public class BeforeDateMatcher extends TypeSafeMatcher<Date> {
 
+    /**
+     * Check that the actual date is before the expected.
+     */
     @Factory
     public static BeforeDateMatcher fallsBefore(Date expected) {
-        return new BeforeDateMatcher(new TimeOperations(), expected);
+        return new BeforeDateMatcher(expected);
+    }
+
+    /**
+     * Check that the actual date falls before the supplied expected date within a supplied duration.
+     * <p>
+     * Note: This method is supplied to make the "within" feature more discoverable. It is also possible to call the
+     * {@link BeforeDateMatcher#within} method on the {@link BeforeDateMatcher} returned by the
+     * {@link #fallsBefore(Date)} method e.g. {@code assertThat(actual, fallsBefore(expected).within(duration, unit));}
+     */
+    public static BeforeWithinDateMatcher fallsBefore(Date expected, Within within) {
+        return BeforeDateMatcher.fallsBefore(expected).within(within.getDuration(), within.getUnit());
     }
 
     private final TimeOperations timeOperations;
     private final Date expected;
 
-    public BeforeDateMatcher(TimeOperations timeOperations, Date expected) {
+    public BeforeDateMatcher(Date expected) {
+        this(new TimeOperations(), expected);
+    }
+
+    BeforeDateMatcher(TimeOperations timeOperations, Date expected) {
         this.timeOperations = timeOperations;
         this.expected = expected;
     }

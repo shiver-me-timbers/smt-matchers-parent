@@ -38,6 +38,7 @@ import static shiver.me.timbers.data.random.RandomTimes.someTime;
 import static shiver.me.timbers.matchers.DateMatchers.fallsAfter;
 import static shiver.me.timbers.matchers.DateMatchers.fallsBefore;
 import static shiver.me.timbers.matchers.DateMatchers.fallsOn;
+import static shiver.me.timbers.matchers.Within.within;
 
 public class DateMatchersTest {
 
@@ -111,6 +112,7 @@ public class DateMatchersTest {
 
         // Then
         assertThat(actual, fallsOn(expected).within(duration, unit));
+        assertThat(actual, fallsOn(expected, within(duration, unit)));
     }
 
     @Test
@@ -182,6 +184,7 @@ public class DateMatchersTest {
 
         // Then
         assertThat(actual, fallsBefore(expected).within(duration, unit));
+        assertThat(actual, fallsBefore(expected, within(duration, unit)));
     }
 
     @Test
@@ -252,6 +255,7 @@ public class DateMatchersTest {
 
         // Then
         assertThat(actual, fallsAfter(expected).within(duration, unit));
+        assertThat(actual, fallsAfter(expected, within(duration, unit)));
     }
 
     @Test

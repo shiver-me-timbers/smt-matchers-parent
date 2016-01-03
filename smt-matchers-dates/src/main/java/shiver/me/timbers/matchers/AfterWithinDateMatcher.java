@@ -32,7 +32,11 @@ public class AfterWithinDateMatcher extends TimeOperationsDateMatcher {
     private final Long duration;
     private final TimeUnit unit;
 
-    public AfterWithinDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
+    public AfterWithinDateMatcher(Date expected, Long duration, TimeUnit unit) {
+        this(new TimeOperations(), expected, duration, unit);
+    }
+
+    AfterWithinDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
         super(timeOperations, expected, duration, unit);
         this.expected = expected;
         this.duration = duration;

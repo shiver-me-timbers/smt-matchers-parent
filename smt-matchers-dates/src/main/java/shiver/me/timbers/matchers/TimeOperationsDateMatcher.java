@@ -24,13 +24,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Karl Bennett
  */
-public abstract class TimeOperationsDateMatcher extends TypeSafeMatcher<Date> {
+abstract class TimeOperationsDateMatcher extends TypeSafeMatcher<Date> {
 
     private final TimeOperations timeOperations;
     private final long expectedTime;
     private final long durationInMillis;
 
-    public TimeOperationsDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
+    TimeOperationsDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
         this.timeOperations = timeOperations;
         this.expectedTime = expected.getTime();
         this.durationInMillis = unit.toMillis(duration);

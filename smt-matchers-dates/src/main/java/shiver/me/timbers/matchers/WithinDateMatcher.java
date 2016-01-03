@@ -28,14 +28,16 @@ import java.util.concurrent.TimeUnit;
  */
 public class WithinDateMatcher extends TimeOperationsDateMatcher {
 
-    private final TimeOperations timeOperations;
     private final Date expected;
     private final Long duration;
     private final TimeUnit unit;
 
-    public WithinDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
+    public WithinDateMatcher(Date expected, Long duration, TimeUnit unit) {
+        this(new TimeOperations(), expected, duration, unit);
+    }
+
+    WithinDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
         super(timeOperations, expected, duration, unit);
-        this.timeOperations = timeOperations;
         this.expected = expected;
         this.duration = duration;
         this.unit = unit;

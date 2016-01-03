@@ -39,6 +39,11 @@ public class BeforeWithinDateMatcherTest {
     }
 
     @Test
+    public void Instantiation_to_get_full_coverage() {
+        new BeforeWithinDateMatcher(mock(Date.class), someLong(), someEnum(TimeUnit.class));
+    }
+
+    @Test
     public void Can_check_that_a_date_is_within_a_range_before_another_date() {
 
         final Date date1 = mock(Date.class);
