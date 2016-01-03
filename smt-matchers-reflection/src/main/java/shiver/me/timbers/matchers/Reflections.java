@@ -21,17 +21,17 @@ import java.lang.reflect.Field;
 /**
  * @author Karl Bennett
  */
-public class Reflections {
+class Reflections {
 
     @SuppressWarnings("unchecked")
-    public <T> T getFieldValue(String name, Object object) throws NoSuchFieldException, IllegalAccessException {
+    <T> T getFieldValue(String name, Object object) throws NoSuchFieldException, IllegalAccessException {
         final Field field = findDeclaredField(name, object.getClass());
         field.setAccessible(true);
         return (T) field.get(object);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getPropertyValue(String property, Object object)
+    <T> T getPropertyValue(String property, Object object)
         throws NoSuchPropertyException {
         return (T) findProperty(property, property.split("\\."), 0, object, object);
     }

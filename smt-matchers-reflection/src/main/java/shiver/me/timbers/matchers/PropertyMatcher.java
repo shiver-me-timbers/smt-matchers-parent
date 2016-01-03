@@ -31,12 +31,19 @@ public class PropertyMatcher<T> extends DescribingMatcher<T> {
     private final String property;
     private final Matcher matcher;
 
+    /**
+     * Check the that the properties (e.g. "one.two.three") value is valid for the supplied matcher.
+     */
     @Factory
     public static <T> PropertyMatcher<T> hasPropertyThat(String property, Matcher matcher) {
-        return new PropertyMatcher<>(new Reflections(), property, matcher);
+        return new PropertyMatcher<>(property, matcher);
     }
 
-    public PropertyMatcher(Reflections reflections, String property, Matcher matcher) {
+    public PropertyMatcher(String property, Matcher matcher) {
+        this(new Reflections(), property, matcher);
+    }
+
+    PropertyMatcher(Reflections reflections, String property, Matcher matcher) {
         this.reflections = reflections;
         this.property = property;
         this.matcher = matcher;

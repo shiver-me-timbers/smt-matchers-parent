@@ -27,16 +27,23 @@ import org.hamcrest.Matcher;
  */
 public class FieldMatcher<T> extends DescribingMatcher<T> {
 
+    /**
+     * Check the that the named fields value is valid for the supplied matcher.
+     */
     @Factory
     public static <T> FieldMatcher<T> hasFieldThat(String fieldName, Matcher matcher) {
-        return new FieldMatcher<>(new Reflections(), fieldName, matcher);
+        return new FieldMatcher<>(fieldName, matcher);
     }
 
     private final Reflections reflections;
     private final String fieldName;
     private final Matcher matcher;
 
-    public FieldMatcher(Reflections reflections, String fieldName, Matcher matcher) {
+    public FieldMatcher(String fieldName, Matcher matcher) {
+        this(new Reflections(), fieldName, matcher);
+    }
+
+    FieldMatcher(Reflections reflections, String fieldName, Matcher matcher) {
         this.reflections = reflections;
         this.fieldName = fieldName;
         this.matcher = matcher;
