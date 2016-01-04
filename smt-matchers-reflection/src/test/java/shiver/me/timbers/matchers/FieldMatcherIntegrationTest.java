@@ -133,16 +133,11 @@ public class FieldMatcherIntegrationTest {
         // Given
         final Long expected = someLong();
         class AClass {
-            private final long fieldName;
-
-            AClass(long fieldName) {
-                this.fieldName = fieldName;
-            }
+            private final long fieldName = expected;
         }
-        final AClass object = new AClass(expected);
 
         // Then
-        assertThat(object, hasField("fieldName", expected));
+        assertThat(new AClass(), hasField("fieldName", expected));
     }
 
     @Test

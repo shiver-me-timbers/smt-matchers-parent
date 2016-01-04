@@ -15,5 +15,6 @@ limitations under the License.
 -->
 smt-matchers-parent
 ===========
+[![Build Status](https://travis-ci.org/shiver-me-timbers/smt-matchers-parent.svg?branch=master)](https://travis-ci.org/shiver-me-timbers/smt-matchers-parent) [![Coverage Status](https://coveralls.io/repos/shiver-me-timbers/smt-matchers-parent/badge.svg?branch=master&service=github)](https://coveralls.io/github/shiver-me-timbers/smt-matchers-parent?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.shiver-me-timbers/smt-matchers-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.shiver-me-timbers/smt-matchers-parent/)
 
 This is the parent pom to the smt-matchers projects.
