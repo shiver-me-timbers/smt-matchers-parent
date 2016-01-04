@@ -20,6 +20,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+
 /**
  * Matches the value of a field with a given name within an object.
  *
@@ -33,6 +35,13 @@ public class FieldMatcher<T> extends DescribingMatcher<T> {
     @Factory
     public static <T> FieldMatcher<T> hasFieldThat(String fieldName, Matcher matcher) {
         return new FieldMatcher<>(fieldName, matcher);
+    }
+
+    /**
+     * Check the that the named fields value matches the supplied value.
+     */
+    public static <T> FieldMatcher<T> hasField(String fieldName, Object expected) {
+        return FieldMatcher.hasFieldThat(fieldName, equalTo(expected));
     }
 
     private final Reflections reflections;

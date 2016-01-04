@@ -101,6 +101,7 @@
     <modules>
         <module>smt-matchers-dates</module>
         <module>smt-matchers-reflection</module>
+        <module>smt-matchers</module>
     </modules>
 
     <scm>

@@ -20,6 +20,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Factory;
 import org.hamcrest.Matcher;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+
 /**
  * Matches the value of a given property (e.g. "one.two.three") that starts within an object.
  *
@@ -37,6 +39,13 @@ public class PropertyMatcher<T> extends DescribingMatcher<T> {
     @Factory
     public static <T> PropertyMatcher<T> hasPropertyThat(String property, Matcher matcher) {
         return new PropertyMatcher<>(property, matcher);
+    }
+
+    /**
+     * Check the that the properties (e.g. "one.two.three") value matches the supplied value.
+     */
+    public static <T> PropertyMatcher<T> hasProperty(String property, Object expected) {
+        return PropertyMatcher.hasPropertyThat(property, equalTo(expected));
     }
 
     public PropertyMatcher(String property, Matcher matcher) {

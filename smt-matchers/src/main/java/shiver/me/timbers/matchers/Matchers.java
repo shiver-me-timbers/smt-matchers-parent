@@ -1,5 +1,5 @@
 /*
- * Copyright 2015 Karl Bennett
+ * Copyright 2016 Karl Bennett
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,16 @@
 
 package shiver.me.timbers.matchers;
 
+import org.hamcrest.Matcher;
+
 import java.util.Date;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+
 /**
- * Matchers that can be used to verify if a date is on or close to another specified date.
- *
  * @author Karl Bennett
  */
-public class DateMatchers {
+public class Matchers {
 
     /**
      * Check that the actual date is before the expected.
@@ -77,5 +79,33 @@ public class DateMatchers {
      */
     public static AfterWithinDateMatcher fallsAfter(Date expected, Within within) {
         return AfterDateMatcher.fallsAfter(expected, within);
+    }
+
+    /**
+     * Check the that the named fields value is valid for the supplied matcher.
+     */
+    public static <T> FieldMatcher<T> hasFieldThat(String fieldName, Matcher matcher) {
+        return FieldMatcher.hasFieldThat(fieldName, matcher);
+    }
+
+    /**
+     * Check the that the named fields value matches the supplied value.
+     */
+    public static <T> FieldMatcher<T> hasField(String fieldName, Object expected) {
+        return FieldMatcher.hasFieldThat(fieldName, equalTo(expected));
+    }
+
+    /**
+     * Check the that the properties (e.g. "one.two.three") value is valid for the supplied matcher.
+     */
+    public static <T> PropertyMatcher<T> hasPropertyThat(String property, Matcher matcher) {
+        return PropertyMatcher.hasPropertyThat(property, matcher);
+    }
+
+    /**
+     * Check the that the properties (e.g. "one.two.three") value matches the supplied value.
+     */
+    public static <T> PropertyMatcher<T> hasProperty(String property, Object expected) {
+        return PropertyMatcher.hasPropertyThat(property, equalTo(expected));
     }
 }
