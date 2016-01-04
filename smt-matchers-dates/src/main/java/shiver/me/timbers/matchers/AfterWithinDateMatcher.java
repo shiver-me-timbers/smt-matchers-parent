@@ -37,15 +37,16 @@ public class AfterWithinDateMatcher extends TimeOperationsDateMatcher {
     }
 
     AfterWithinDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
-        super(timeOperations, expected, duration, unit);
+        super(timeOperations, duration, unit);
         this.expected = expected;
         this.duration = duration;
         this.unit = unit;
     }
 
     @Override
-    protected boolean matchesTime(TimeOperations timeOperations, long expected, long duration, long actual) {
-        return timeOperations.isAfter(expected, actual) && timeOperations.isBefore(expected + duration, actual);
+    protected boolean matchesTime(TimeOperations timeOperations, long duration, Date actual) {
+        return timeOperations.isBeforeOrEqualTo(actual.getTime(), expected.getTime() + duration)
+            && actual.after(expected);
     }
 
     @Override

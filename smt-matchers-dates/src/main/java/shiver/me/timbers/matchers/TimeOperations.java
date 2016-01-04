@@ -21,11 +21,11 @@ package shiver.me.timbers.matchers;
  */
 class TimeOperations {
 
-    boolean isBefore(long expected, long actual) {
+    boolean isBeforeOrEqualTo(long actual, long expected) {
         return expected >= actual;
     }
 
-    boolean isAfter(long expected, long actual) {
+    boolean isAfterOrEqualTo(long actual, long expected) {
         return expected <= actual;
     }
 }

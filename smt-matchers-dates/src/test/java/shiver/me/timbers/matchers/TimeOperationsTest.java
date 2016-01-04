@@ -32,7 +32,7 @@ public class TimeOperationsTest {
         final Long actualTime = expectedTime - 1;
 
         // When
-        final boolean actual = new TimeOperations().isBefore(expectedTime, actualTime);
+        final boolean actual = new TimeOperations().isBeforeOrEqualTo(actualTime, expectedTime);
 
         // Then
         assertThat(actual, is(true));
@@ -45,7 +45,7 @@ public class TimeOperationsTest {
         final Long expectedTime = someLong();
 
         // When
-        final boolean actual = new TimeOperations().isBefore(expectedTime, expectedTime);
+        final boolean actual = new TimeOperations().isBeforeOrEqualTo(expectedTime, expectedTime);
 
         // Then
         assertThat(actual, is(true));
@@ -59,7 +59,7 @@ public class TimeOperationsTest {
         final Long actualTime = expectedTime + 1;
 
         // When
-        final boolean actual = new TimeOperations().isBefore(expectedTime, actualTime);
+        final boolean actual = new TimeOperations().isBeforeOrEqualTo(actualTime, expectedTime);
 
         // Then
         assertThat(actual, is(false));
@@ -73,7 +73,7 @@ public class TimeOperationsTest {
         final Long actualTime = expectedTime + 1;
 
         // When
-        final boolean actual = new TimeOperations().isAfter(expectedTime, actualTime);
+        final boolean actual = new TimeOperations().isAfterOrEqualTo(actualTime, expectedTime);
 
         // Then
         assertThat(actual, is(true));
@@ -86,7 +86,7 @@ public class TimeOperationsTest {
         final Long expectedTime = someLong();
 
         // When
-        final boolean actual = new TimeOperations().isAfter(expectedTime, expectedTime);
+        final boolean actual = new TimeOperations().isAfterOrEqualTo(expectedTime, expectedTime);
 
         // Then
         assertThat(actual, is(true));
@@ -100,7 +100,7 @@ public class TimeOperationsTest {
         final Long actualTime = expectedTime - 1;
 
         // When
-        final boolean actual = new TimeOperations().isAfter(expectedTime, actualTime);
+        final boolean actual = new TimeOperations().isAfterOrEqualTo(actualTime, expectedTime);
 
         // Then
         assertThat(actual, is(false));

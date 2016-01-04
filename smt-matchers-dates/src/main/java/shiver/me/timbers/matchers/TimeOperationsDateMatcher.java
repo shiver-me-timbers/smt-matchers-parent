@@ -27,20 +27,17 @@ import java.util.concurrent.TimeUnit;
 abstract class TimeOperationsDateMatcher extends TypeSafeMatcher<Date> {
 
     private final TimeOperations timeOperations;
-    private final long expectedTime;
     private final long durationInMillis;
 
-    TimeOperationsDateMatcher(TimeOperations timeOperations, Date expected, Long duration, TimeUnit unit) {
+    TimeOperationsDateMatcher(TimeOperations timeOperations, Long duration, TimeUnit unit) {
         this.timeOperations = timeOperations;
-        this.expectedTime = expected.getTime();
         this.durationInMillis = unit.toMillis(duration);
     }
 
     @Override
     protected boolean matchesSafely(Date actual) {
-        final long actualTime = actual.getTime();
-        return matchesTime(timeOperations, expectedTime, durationInMillis, actualTime);
+        return matchesTime(timeOperations, durationInMillis, actual);
     }
 
-    protected abstract boolean matchesTime(TimeOperations timeOperations, long expected, long duration, long actual);
+    protected abstract boolean matchesTime(TimeOperations timeOperations, long duration, Date actual);
 }

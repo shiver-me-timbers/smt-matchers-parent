@@ -21,12 +21,17 @@ import org.junit.Test;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.MINUTES;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static shiver.me.timbers.data.random.RandomEnums.someEnum;
 import static shiver.me.timbers.data.random.RandomLongs.someLong;
 import static shiver.me.timbers.data.random.RandomLongs.someLongBetween;
 import static shiver.me.timbers.data.random.RandomLongs.somePositiveLong;
+import static shiver.me.timbers.data.random.RandomThings.someThing;
 import static shiver.me.timbers.matchers.Matchers.fallsAfter;
 import static shiver.me.timbers.matchers.Matchers.fallsBefore;
 import static shiver.me.timbers.matchers.Matchers.fallsOn;
@@ -47,11 +52,11 @@ public class MatchersTest {
     public void Can_check_that_a_date_falls_before_and_close_to_another_date() {
 
         // Given
-        final Long date1 = somePositiveLong();
-        final Long duration = someLongBetween(0L, 1000L);
-        final TimeUnit unit = someEnum(TimeUnit.class);
+        final Long date1 = someLongBetween(0L, 1000L);
+        final Long duration = someLongBetween(1L, 1000L);
+        final TimeUnit unit = someThing(MILLISECONDS, SECONDS, MINUTES, HOURS);
         final Long durationInMilliseconds = unit.toMillis(duration);
-        final Long difference = someLongBetween(0L, durationInMilliseconds);
+        final Long difference = someLongBetween(1L, durationInMilliseconds);
         final Long date2 = date1 - difference;
         final Date expected = new Date(date1);
         final Date actual = new Date(date2);
@@ -83,11 +88,11 @@ public class MatchersTest {
     public void Can_check_that_a_date_falls_close_to_after_another_date() {
 
         // Given
-        final Long date1 = somePositiveLong();
-        final Long duration = someLongBetween(0L, 1000L);
-        final TimeUnit unit = someEnum(TimeUnit.class);
+        final Long date1 = someLongBetween(0L, 1000L);
+        final Long duration = someLongBetween(1L, 1000L);
+        final TimeUnit unit = someThing(MILLISECONDS, SECONDS, MINUTES, HOURS);
         final Long durationInMilliseconds = unit.toMillis(duration);
-        final Long difference = someLongBetween(0L, durationInMilliseconds);
+        final Long difference = someLongBetween(1L, durationInMilliseconds);
         final Long date2 = date1 + difference;
         final Date expected = new Date(date1);
         final Date actual = new Date(date2);

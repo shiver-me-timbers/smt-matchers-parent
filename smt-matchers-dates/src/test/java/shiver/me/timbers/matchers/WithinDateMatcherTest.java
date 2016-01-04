@@ -59,8 +59,8 @@ public class WithinDateMatcherTest {
         // Given
         given(date1.getTime()).willReturn(dateTime1);
         given(date2.getTime()).willReturn(dateTime2);
-        given(timeOperations.isAfter(dateTime1 - durationInMillis, dateTime2)).willReturn(true);
-        given(timeOperations.isBefore(dateTime1 + durationInMillis, dateTime2)).willReturn(true);
+        given(timeOperations.isAfterOrEqualTo(dateTime2, dateTime1 - durationInMillis)).willReturn(true);
+        given(timeOperations.isBeforeOrEqualTo(dateTime2, dateTime1 + durationInMillis)).willReturn(true);
 
         // When
         final boolean actual = new WithinDateMatcher(timeOperations, date1, duration, unit).matches(date2);
@@ -85,8 +85,8 @@ public class WithinDateMatcherTest {
         // Given
         given(date1.getTime()).willReturn(dateTime1);
         given(date2.getTime()).willReturn(dateTime2);
-        given(timeOperations.isAfter(dateTime1 - durationInMillis, dateTime2)).willReturn(false);
-        given(timeOperations.isBefore(dateTime1 + durationInMillis, dateTime2)).willReturn(true);
+        given(timeOperations.isAfterOrEqualTo(dateTime2, dateTime1 - durationInMillis)).willReturn(false);
+        given(timeOperations.isBeforeOrEqualTo(dateTime2, dateTime1 + durationInMillis)).willReturn(true);
 
         // When
         final boolean actual = new WithinDateMatcher(timeOperations, date1, duration, unit).matches(date2);
@@ -111,8 +111,8 @@ public class WithinDateMatcherTest {
         // Given
         given(date1.getTime()).willReturn(dateTime1);
         given(date2.getTime()).willReturn(dateTime2);
-        given(timeOperations.isAfter(dateTime1 - durationInMillis, dateTime2)).willReturn(true);
-        given(timeOperations.isBefore(dateTime1 + durationInMillis, dateTime2)).willReturn(false);
+        given(timeOperations.isAfterOrEqualTo(dateTime2, dateTime1 - durationInMillis)).willReturn(true);
+        given(timeOperations.isBeforeOrEqualTo(dateTime2, dateTime1 + durationInMillis)).willReturn(false);
 
         // When
         final boolean actual = new WithinDateMatcher(timeOperations, date1, duration, unit).matches(date2);
