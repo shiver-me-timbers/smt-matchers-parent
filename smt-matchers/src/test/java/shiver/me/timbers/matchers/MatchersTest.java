@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.String.format;
 import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
@@ -28,9 +29,12 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static shiver.me.timbers.data.random.RandomEnums.someEnum;
+import static shiver.me.timbers.data.random.RandomFloats.someFloat;
+import static shiver.me.timbers.data.random.RandomIntegers.someInteger;
 import static shiver.me.timbers.data.random.RandomLongs.someLong;
 import static shiver.me.timbers.data.random.RandomLongs.someLongBetween;
 import static shiver.me.timbers.data.random.RandomLongs.somePositiveLong;
+import static shiver.me.timbers.data.random.RandomStrings.someAlphaNumericString;
 import static shiver.me.timbers.data.random.RandomThings.someThing;
 import static shiver.me.timbers.matchers.Matchers.fallsAfter;
 import static shiver.me.timbers.matchers.Matchers.fallsBefore;
@@ -39,6 +43,7 @@ import static shiver.me.timbers.matchers.Matchers.hasField;
 import static shiver.me.timbers.matchers.Matchers.hasFieldThat;
 import static shiver.me.timbers.matchers.Matchers.hasProperty;
 import static shiver.me.timbers.matchers.Matchers.hasPropertyThat;
+import static shiver.me.timbers.matchers.Matchers.matches;
 import static shiver.me.timbers.matchers.Within.within;
 
 public class MatchersTest {
@@ -164,5 +169,15 @@ public class MatchersTest {
 
         // Then
         assertThat(new CClass(), hasProperty("one.two.three", expected));
+    }
+
+    @Test
+    public void Can_check_that_a_string_matches_the_supplied_pattern() {
+
+        // Given
+        final String actual = format("%d %.2f %s", someInteger(), someFloat(), someAlphaNumericString(4));
+
+        // Then
+        assertThat(actual, matches("-?\\d+ -?\\d+\\.\\d\\d [a-zA-Z0-9]{4}"));
     }
 }

@@ -108,4 +108,11 @@ public class Matchers {
     public static <T> PropertyMatcher<T> hasProperty(String property, Object expected) {
         return PropertyMatcher.hasPropertyThat(property, equalTo(expected));
     }
+
+    /**
+     * Check the that the regex pattern matches the supplied value.
+     */
+    public static Matcher<String> matches(String pattern) {
+        return StringRegexMatcher.matches(pattern);
+    }
 }

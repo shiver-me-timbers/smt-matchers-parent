@@ -30,7 +30,10 @@
 
     <name>${project.artifactId}</name>
 
-    <description>This library contains Hamcrest style matchers that can be used to apply matchers to the internals of a class using reflection.</description>
+    <description>
+        This library contains Hamcrest style matchers that can be used to apply matchers to the internals of a class
+        using reflection.
+    </description>
 
     <dependencies>
         <dependency>

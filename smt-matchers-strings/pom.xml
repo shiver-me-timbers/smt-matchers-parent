@@ -24,34 +24,15 @@
         <version>1.2-SNAPSHOT</version>
     </parent>
 
-    <artifactId>smt-matchers</artifactId>
+    <artifactId>smt-matchers-strings</artifactId>
 
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
 
-    <description>
-        This library contains Hamcrest style matchers that can be used to carry out complex verifications like dates or
-        reflection.
-    </description>
+    <description>This library contains Hamcrest style matchers that can be used to verify strings.</description>
 
     <dependencies>
-        <dependency>
-            <groupId>com.github.shiver-me-timbers</groupId>
-            <artifactId>smt-matchers-dates</artifactId>
-            <version>1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.shiver-me-timbers</groupId>
-            <artifactId>smt-matchers-reflection</artifactId>
-            <version>1.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.shiver-me-timbers</groupId>
-            <artifactId>smt-matchers-strings</artifactId>
-            <version>1.2-SNAPSHOT</version>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
