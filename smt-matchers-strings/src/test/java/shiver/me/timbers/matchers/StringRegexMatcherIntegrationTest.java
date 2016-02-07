@@ -65,7 +65,7 @@ public class StringRegexMatcherIntegrationTest {
 
         // Given
         final String pattern = "\\d+ \\d+";
-        final String actual = someString(5);
+        final String actual = someAlphaNumericString(5);
         noMatchErrorMessage.execute(writer, new HashMap<String, String>() {{
             put("pattern", pattern);
             put("actual", actual);
