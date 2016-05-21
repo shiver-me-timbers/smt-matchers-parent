@@ -21,6 +21,7 @@ This is the parent pom to the smt-matchers projects.
 
 ### Projects
 
+- [smt-matchers-strings](smt-matchers-strings)
 - [smt-matchers-dates](smt-matchers-dates)
 - [smt-matchers-reflection](smt-matchers-reflection)
 - [smt-matchers](smt-matchers)

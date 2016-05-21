@@ -24,6 +24,13 @@ reflection.
 
 All the matcher methods can be found in the [`Matchers`](src/main/java/shiver/me/timbers/matchers/Matchers.java) class.
 
+##### Strings
+
+Check that a string matches a specific regex pattern.
+```java
+assertThat(actual, matches(regex));
+```
+
 ##### Dates
 
 Check that a date falls before but not on a specific date.
